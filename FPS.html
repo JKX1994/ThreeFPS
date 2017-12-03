@@ -4,6 +4,8 @@
     <head>
         <meta charset="utf-8">
         <title>cannon.js + three.js FPS</title>
+        <link rel="stylesheet" href="demo.css">
+        <link rel="stylesheet" href="default.css">
         <style>
             html, body {
                 width: 100%;
@@ -40,15 +42,6 @@
                 text-align: center;
                 cursor: pointer;
             }
-            #info {
-                position: absolute;
-                top: 100%;
-                width: 100%;
-                text-align: center;
-                z-index: 100;
-                display:box;
-                font-size:50px;
-            }
         </style>
     </head>
     <body>
@@ -57,11 +50,21 @@
         <script src="js/PointerLockControls.js"></script>
         <script src="js/Vec3.js"></script>
         <script src="js/Quaternion.js"></script>
+        <script src="js/Scoreboard.js"></script>
+        <script src="js/mootools-yui-compressed.js"></script>
 
-        <div id="info">
-            <span style="font-size:60px">Click to play</span>
-
-        </div>
+        <!-- <article class="scoreboard" id="scoreboard">
+            <div class="scores">
+                <span class="team" data-scoreboard-bind="homeTeamName"></span>
+                <span class="score">
+                    <span data-scoreboard-bind="homeTeamGoals"></span>
+                    0
+                    <span data-scoreboard-bind="awayTeamGoals"></span>
+                </span>
+                <span class="team" data-scoreboard-bind="awayTeamName"></span>
+            </div> 
+            <span class="time" data-scoreboard-bind="time"></span>
+        </article> -->
 
         <div id="blocker">
 
@@ -79,6 +82,12 @@
             var zeroPoint = new Vec3(0,-10,0);
             var zeroBall = new Quaternion(0,0,0,1);
             var score = 0;
+            var scoreboard = new Scoreboard({
+                homeTeamName: 'player',
+                arena: '3D FPS Playground' // You can store your own data too
+            });
+            console.log(scoreboard);
+
             var GROUP0 = 4;
             var GROUP1 = 1;
             var GROUP2 = 2;
@@ -266,6 +275,7 @@
                 requestAnimationFrame( animate );
                 if(controls.enabled){
                     world.step(dt);
+                    scoreboard.setScore(score);
                     count++;
                     for(var i=0; i<bodiesToRemove.length; i++){
                         world.removeBody(bodiesToRemove[i]);
@@ -350,7 +360,6 @@
                     ballBody.addEventListener("collide", function(e){
                         bodiesToRemove.push(ballBody); 
                         score=score+1; 
-                        console.log(score);
                     } );                   
                     ballBody.visualref = ballMesh;
                     ballBody.visualref.visualId = balls.length;
