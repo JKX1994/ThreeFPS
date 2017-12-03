@@ -42,11 +42,12 @@
             }
             #info {
                 position: absolute;
-                top: 10px;
+                top: 100%;
                 width: 100%;
                 text-align: center;
                 z-index: 100;
-                display:block;
+                display:box;
+                font-size:50px;
             }
         </style>
     </head>
@@ -58,7 +59,7 @@
         <script src="js/Quaternion.js"></script>
 
         <div id="info">
-            <span style="font-size:40px">Click to play</span>
+            <span style="font-size:60px">Click to play</span>
 
         </div>
 
@@ -69,14 +70,13 @@
                 <br />
                 (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
             </div>
-
         </div>
 
         <script>
             var sphereShape, sphereBody, world, physicsMaterial, walls=[], balls=[], ballMeshes=[], boxes=[], boxMeshes=[], bodiesToRemove=[], bodies=[];
             var camera, scene, renderer;
             var geometry, material, mesh;
-            var zeroPoint = new Vec3(0,0,-100);
+            var zeroPoint = new Vec3(0,-10,0);
             var zeroBall = new Quaternion(0,0,0,1);
             var score = 0;
             var GROUP0 = 4;
@@ -299,17 +299,12 @@
                         if(balls[i]){
                             for(var j=0; j<bodiesToRemove.length; j++){
                                 if(balls[i] && balls[i].visualref.visualId==bodiesToRemove[j].visualref.visualId){
-                                    //ballMeshes[i].position.copy(zeroPoint);
-                                    //ballMeshes[i].quaternion.copy(balls[i].quaternion);
                                     balls[i]=null;
-                                    //bodiesToRemove[j]=null;
                                 }
                             }
                             if(balls[i]){
                                 ballMeshes[i].position.copy(balls[i].position);
                                 ballMeshes[i].quaternion.copy(balls[i].quaternion);
-                                //console.log(balls[i].position);
-                                //console.log(balls[i].quaternion);
                             }else{
                                 ballMeshes[i].position.copy(zeroPoint);
                                 ballMeshes[i].quaternion.copy(zeroBall);
@@ -352,7 +347,11 @@
                     ballBody.addShape(ballShape);
                     var ballMesh = new THREE.Mesh( ballGeometry, material );
                     world.addBody(ballBody);
-                    ballBody.addEventListener("collide", function(e){bodiesToRemove.push(ballBody); score=score+1; } );                   
+                    ballBody.addEventListener("collide", function(e){
+                        bodiesToRemove.push(ballBody); 
+                        score=score+1; 
+                        console.log(score);
+                    } );                   
                     ballBody.visualref = ballMesh;
                     ballBody.visualref.visualId = balls.length;
                     scene.add(ballMesh);
