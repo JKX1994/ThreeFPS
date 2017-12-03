@@ -193,11 +193,18 @@
             function init() {
                 camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
                 scene = new THREE.Scene();
-                scene.fog = new THREE.Fog( 0x000000, 0, 500 );
+                scene.fog = new THREE.Fog( 'skyblue' );// , 0, 500 );
                 var ambient = new THREE.AmbientLight( 0x111111 );
                 scene.add( ambient );
+
+                var light = new THREE.DirectionalLight( 0xffffff, 1, 100 );
+                light.position.set( 10, 1000, 10 );          //default; light shining from top
+                light.castShadow = true;            // default false
+                scene.add( light );
+
+               
                 light = new THREE.SpotLight( 0xffffff );
-                light.position.set( 10, 30, 20 );
+                light.position.set( 20, 30, 30 );
                 light.target.position.set( 0, 0, 0 );
                 if(true){
                     light.castShadow = true;
@@ -216,7 +223,8 @@
                 // floor
                 geometry = new THREE.PlaneGeometry( 300, 300, 50, 50 );
                 geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-                material = new THREE.MeshLambertMaterial( { color: 0xdddddd } );
+                var groundColor = new THREE.Color("rgb(153, 157, 170)");
+                material = new THREE.MeshLambertMaterial( { color: groundColor } );
                 mesh = new THREE.Mesh( geometry, material );
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
