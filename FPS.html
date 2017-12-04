@@ -52,6 +52,8 @@
         <script src="js/Quaternion.js"></script>
         <script src="js/Scoreboard.js"></script>
         <script src="js/mootools-yui-compressed.js"></script>
+        <!-- <script src="js/Three_llc.js"></script> -->
+        <script src="js/PLYLoader.js"></script>
 
         <!-- <article class="scoreboard" id="scoreboard">
             <div class="scores">
@@ -146,6 +148,7 @@
             initCannon();
             init();
             animate();
+
             function initCannon(){
                 // Setup our world
                 world = new CANNON.World();
@@ -236,6 +239,25 @@
                 renderer.setClearColor( scene.fog.color, 1 );
                 document.body.appendChild( renderer.domElement );
                 window.addEventListener( 'resize', onWindowResize, false );
+                var llc_loader = new THREE.PLYLoader();
+                llc_loader.load( './mac.ply', function ( geometry ) {
+
+                    var llc_material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+                    var llc_mesh = new THREE.Mesh( geometry, llc_material );
+
+                    llc_material.side = THREE.BackSide;
+                    //var x = (Math.random()-0.5)*20;
+                    //var y = 1 + (Math.random()-0.5)*1;
+                    //var z = (Math.random()-0.5)*20;
+                    llc_mesh.position.y = 0;
+                    llc_mesh.position.z = 5;
+                    llc_mesh.rotation.x = 5;
+                    llc_mesh.scale.multiplyScalar(10);
+
+
+                    scene.add( llc_mesh );
+
+                } );
                 // Add linked boxes
                 var size = 0.5;
                 var he = new CANNON.Vec3(size,size,size*0.1);
@@ -295,21 +317,42 @@
                     var boxGeometry = new THREE.BoxGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
                     if (count % 120 == 0) {
                         boxNum++;
-                        var x = 15*size*Math.random();
+                        console.log("hhhhhh");
+                        // var x = 15*size*Math.random();
+                        // var y = 10;
+                        // var z = 15*size*Math.random();
+                        var x = 10;
                         var y = 10;
-                        var z = 15*size*Math.random();
+                        var z = 10;
                         var boxBody = new CANNON.Body({ mass: 5, collisionFilterGroup: GROUP1, collisionFilterMask: GROUP2});
                         boxBody.addShape(boxShape);
                         //boxBody.addEventListener("collide", function(e){ console.log("sphere collided"); } );
-                        var boxMesh = new THREE.Mesh( boxGeometry, material );
+                        //var boxMesh = new THREE.Mesh( boxGeometry, material );
+                        var llc_loader = new THREE.PLYLoader();
+                        llc_loader.load('./mac.ply', function(geometry){
+                            var llc_material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+                            var llc_mesh = new THREE.Mesh( geometry, llc_material );
+                            llc_material.side = THREE.BackSide;
+                            // llc_mesh.position.y = 0;
+                            // llc_mesh.position.z = 5;
+                            // llc_mesh.rotation.x = 5;
+                            llc_mesh.scale.multiplyScalar(2);
+                            scene.add(llc_mesh);
+                            llc_mesh.position.set(x,y,z);
+                            llc_mesh.castShadow = true;
+                            llc_mesh.receiveShadow = true;
+                            console.log(llc_mesh);
+                            boxMeshes.push(llc_mesh);
+                        });
+
                         world.addBody(boxBody);
-                        scene.add(boxMesh);
+                        //scene.add(boxMesh);
                         boxBody.position.set(x,y,z);
-                        boxMesh.position.set(x,y,z);
-                        boxMesh.castShadow = true;
-                        boxMesh.receiveShadow = true;
+                        //boxMesh.position.set(x,y,z);
+                        //boxMesh.castShadow = true;
+                        //boxMesh.receiveShadow = true;
                         boxes.push(boxBody);
-                        boxMeshes.push(boxMesh);
+                        //boxMeshes.push(boxMesh);
                     }
 
                     // Update ball positions
@@ -388,6 +431,42 @@
                     ballMesh.position.set(x,y,z);
                 }
             });
+
+            function myLoad(url){
+                var m = new THREE.Matrix4().makeRotationY( Math.PI );
+
+                var loader = new THREE.PLYLoader();
+                var llc_mesh;
+                //console.log(loader);
+                loader.load( url, function (geometry){
+                    var llc_material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+                    llc_material.side = THREE.BackSide;
+                    llc_mesh = new THREE.Mesh( geometry, llc_material );
+                    llc_mesh.position.y = 0;
+                    llc_mesh.position.z = 5;
+                    llc_mesh.rotation.x = 5;
+                    llc_mesh.scale.multiplyScalar(2);
+                });
+                return llc_mesh;
+                // return llc_loader.load( 'js/mac.ply', function ( geometry ) {
+
+                //     var llc_material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+                //     var llc_mesh = new THREE.Mesh( geometry, llc_material );
+
+                //     llc_material.side = THREE.BackSide;
+                //     //var x = (Math.random()-0.5)*20;
+                //     //var y = 1 + (Math.random()-0.5)*1;
+                //     //var z = (Math.random()-0.5)*20;
+                //     llc_mesh.position.y = 0;
+                //     llc_mesh.position.z = 5;
+                //     llc_mesh.rotation.x = 5;
+                //     llc_mesh.scale.multiplyScalar(2);
+
+                //     return mesh;    
+                //     // scene.add( llc_mesh );
+
+                // } );
+            }
         </script>
     </body>
 </html>
