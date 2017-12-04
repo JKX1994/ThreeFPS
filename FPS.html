@@ -52,6 +52,7 @@
         <script src="js/Quaternion.js"></script>
         <script src="js/Scoreboard.js"></script>
         <script src="js/mootools-yui-compressed.js"></script>
+        <script src="js/PLYLoader.js"></script>
 
         <!-- <article class="scoreboard" id="scoreboard">
             <div class="scores">
@@ -269,6 +270,7 @@
                     last = boxbody;
                 }
             }
+
             function onWindowResize() {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
@@ -278,7 +280,7 @@
             var count = 0;
             var boxNum = 0;
             var size = 1;
-            
+
             function animate() {
                 requestAnimationFrame( animate );
                 if(controls.enabled){
@@ -301,15 +303,22 @@
                         var boxBody = new CANNON.Body({ mass: 5, collisionFilterGroup: GROUP1, collisionFilterMask: GROUP2});
                         boxBody.addShape(boxShape);
                         //boxBody.addEventListener("collide", function(e){ console.log("sphere collided"); } );
-                        var boxMesh = new THREE.Mesh( boxGeometry, material );
-                        world.addBody(boxBody);
-                        scene.add(boxMesh);
-                        boxBody.position.set(x,y,z);
-                        boxMesh.position.set(x,y,z);
-                        boxMesh.castShadow = true;
-                        boxMesh.receiveShadow = true;
-                        boxes.push(boxBody);
-                        boxMeshes.push(boxMesh);
+
+                        var loader = new THREE.PLYLoader();
+                        loader.load( './mac.ply', function ( geometry ) {
+                            var material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+                            var boxMesh = new THREE.Mesh( geometry, material );
+                            material.side = THREE.BackSide;
+                            boxMesh.scale.multiplyScalar(10);
+                            world.addBody(boxBody);
+                            scene.add(boxMesh);
+                            boxBody.position.set(x,y,z);
+                            boxMesh.position.set(x,y,z);
+                            boxMesh.castShadow = true;
+                            boxMesh.receiveShadow = true;
+                            boxes.push(boxBody);
+                            boxMeshes.push(boxMesh);
+                        } );
                     }
 
                     // Update ball positions
