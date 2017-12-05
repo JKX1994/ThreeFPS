@@ -359,7 +359,7 @@
                 time = Date.now();
             }
             var ballShape = new CANNON.Sphere(0.2);
-            var ballGeometry = new THREE.SphereGeometry(ballShape.radius, 32, 32);
+            var ballGeometry = new THREE.SphereGeometry(ballShape.radius, 16, 16);
             var shootDirection = new THREE.Vector3();
             var shootVelo = 40;
             var projector = new THREE.Projector();
@@ -375,7 +375,7 @@
                     var x = sphereBody.position.x;
                     var y = sphereBody.position.y;
                     var z = sphereBody.position.z;
-                    var ballBody = new CANNON.Body({ mass: 1, collisionFilterGroup: GROUP2, collisionFilterMask: GROUP1});
+                    var ballBody = new CANNON.Body({ mass: 0.7, collisionFilterGroup: GROUP2, collisionFilterMask: GROUP1});
                     ballBody.addShape(ballShape);
                     var ballMesh = new THREE.Mesh( ballGeometry, material );
                     world.addBody(ballBody);
