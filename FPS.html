@@ -251,7 +251,7 @@
                 } );
 
                 loader.load( './models/mac.ply', function ( geometry ) {
-                    var material = new THREE.MeshStandardMaterial( { vertexColors: THREE.VertexColors } );
+                    var material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
                     var boxMesh = new THREE.Mesh( geometry, material );
                     material.side = THREE.BackSide;
                     boxMesh.scale.multiplyScalar(10);
@@ -260,7 +260,7 @@
                 } );
 
                 loader.load( './models/book.ply', function ( geometry ) {
-                    var material = new THREE.MeshStandardMaterial( { vertexColors: THREE.VertexColors } );
+                    var material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
                     var boxMesh = new THREE.Mesh( geometry, material );
                     material.side = THREE.BackSide;
                     boxMesh.scale.multiplyScalar(10);
